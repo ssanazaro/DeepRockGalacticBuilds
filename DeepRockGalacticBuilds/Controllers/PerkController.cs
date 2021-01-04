@@ -47,18 +47,18 @@ namespace DeepRockGalacticBuilds.Controllers
 		[ProducesResponseType(typeof(Perk), StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-		public IActionResult GetPerkByID(int modificationID)
+		public IActionResult GetPerkByID(int perkID)
 		{
 			try
 			{
-				var result = PerkManager.GetPerkByID(modificationID);
+				var perk = PerkManager.GetPerkByID(perkID);
 
-				if (result == null)
+				if (perk == null)
 				{
 					return NotFound("Requested trivia question does not exist");
 				}
 
-				return Ok(result);
+				return Ok(perk);
 			}
 
 			catch (Exception ex)
@@ -69,7 +69,7 @@ namespace DeepRockGalacticBuilds.Controllers
 		}
 
 		[HttpPost]
-		[ProducesResponseType(typeof(Perk), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public IActionResult AddPerk([FromBody] Perk perk)
@@ -78,7 +78,7 @@ namespace DeepRockGalacticBuilds.Controllers
 			{
 				var result = PerkManager.AddPerk(perk);
 
-				if (result == null)
+				if (result == false)
 				{
 					return NotFound("Dwarf not added");
 				}
@@ -94,7 +94,7 @@ namespace DeepRockGalacticBuilds.Controllers
 		}
 
 		[HttpPut("")]
-		[ProducesResponseType(typeof(Perk), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public IActionResult UpdatePerk(Perk perk)
@@ -103,7 +103,7 @@ namespace DeepRockGalacticBuilds.Controllers
 			{
 				var result = PerkManager.UpdatePerk(perk);
 
-				if (result == null)
+				if (result == false)
 				{
 					return NotFound("Requested trivia question does not exist");
 				}
@@ -119,7 +119,7 @@ namespace DeepRockGalacticBuilds.Controllers
 		}
 
 		[HttpDelete("")]
-		[ProducesResponseType(typeof(Perk), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public IActionResult DeletePerk(int id)
@@ -128,7 +128,7 @@ namespace DeepRockGalacticBuilds.Controllers
 			{
 				var result = PerkManager.DeletePerk(id);
 
-				if (result == null)
+				if (result == false)
 				{
 					return NotFound("Requested trivia question does not exist");
 				}

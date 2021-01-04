@@ -25,17 +25,17 @@ namespace DeepRockGalacticBuilds.Managers
 			var perk = PerkRepository.GetPerkByID(perkID);
 			return perk;
 		}
-		public Perk AddPerk(Perk perk)
+		public bool AddPerk(Perk perk)
 		{
 			var result = PerkRepository.AddPerk(perk);
 			return result;
 		}
-		public Perk UpdatePerk(Perk perk)
+		public bool UpdatePerk(Perk perk)
 		{
 			var result = PerkRepository.UpdatePerk(perk);
 			return result;
 		}
-		public Perk DeletePerk(int perkID)
+		public bool DeletePerk(int perkID)
 		{
 			var perk = PerkRepository.DeletePerk(perkID);
 			return perk;

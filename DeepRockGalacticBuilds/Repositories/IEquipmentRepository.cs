@@ -10,8 +10,8 @@ namespace DeepRockGalacticBuilds.Repositories
 	{
 		public List<Equipment> GetAllEquipment();
 		public Equipment GetEquipmentByID(int equipmentID);
-		public Equipment AddEquipment(Equipment equipment);
-		public Equipment UpdateEquipment(Equipment equipment);
-		public Equipment DeleteEquipment(int equipmentID);
+		public bool AddEquipment(Equipment equipment);
+		public bool UpdateEquipment(Equipment equipment);
+		public bool DeleteEquipment(int equipmentID);
 	}
 }

@@ -12,7 +12,7 @@ namespace DeepRockGalacticBuilds.Managers
 		public List<Dwarf> GetAllDwarves();
 
 		public Dwarf GetDwarfById(int id);
-		public Dwarf AddDwarf(Dwarf dwarf);
+		public bool AddDwarf(Dwarf dwarf);
 		public bool UpdateDwarf(Dwarf dwarf);
 		public bool DeleteDwarf(int id);
 	}

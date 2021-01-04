@@ -71,7 +71,7 @@ namespace DeepRockGalacticBuilds.Controllers
 		}
 
 		[HttpPost]
-		[ProducesResponseType(typeof(Modification), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public IActionResult AddModification([FromBody] Modification modification)

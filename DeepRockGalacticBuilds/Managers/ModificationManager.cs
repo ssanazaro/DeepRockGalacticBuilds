@@ -26,20 +26,20 @@ namespace DeepRockGalacticBuilds.Managers
 			var modification = ModificationRepository.GetModificationByID(modificationID);
 			return modification;
 		}
-		public Modification AddModification(Modification modification)
+		public bool AddModification(Modification modification)
 		{
 			var result = ModificationRepository.AddModification(modification);
 			return result;
 		}
-		public Modification UpdateModification(Modification modification)
+		public bool UpdateModification(Modification modification)
 		{
 			var result = ModificationRepository.UpdateModification(modification);
 			return result;
 		}
-		public Modification DeleteModification(int modificationID)
+		public bool DeleteModification(int modificationID)
 		{
-			Modification modification = ModificationRepository.DeleteModification(modificationID);
-			return modification;
+			var result = ModificationRepository.DeleteModification(modificationID);
+			return result;
 		}
 	}
 }

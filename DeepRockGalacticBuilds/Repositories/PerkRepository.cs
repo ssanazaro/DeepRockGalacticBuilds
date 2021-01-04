@@ -46,22 +46,38 @@ namespace DeepRockGalacticBuilds.Repositories
 
 		public Perk GetPerkByID(int perkID)
 		{
-			var connectionStringBuilder = new SqliteConnectionStringBuilder();
-			connectionStringBuilder.DataSource = database;
+			var perk = new Perk();
 
-			using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+			try
 			{
-				connection.Open();
+				var connectionStringBuilder = new SqliteConnectionStringBuilder();
+				connectionStringBuilder.DataSource = database;
 
-				var tableCmd = connection.CreateCommand();
-				tableCmd.CommandText = "SELECT * FROM Equipment WHERE EquipmentID = " + perkID;
-				tableCmd.ExecuteNonQuery();
+				using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+				{
+					connection.Open();
 
-				return null;
+					var tableCmd = connection.CreateCommand();
+					tableCmd.CommandText = "SELECT * FROM Perk WHERE PerkID = @PerkID;";
+					tableCmd.Parameters.AddWithValue("@PerkID", perkID);
+					var result = tableCmd.ExecuteReader();
+
+					while (result.Read())
+					{
+						perk.PerkID = Convert.ToInt32(result["PerkID"]);
+						perk.PerkName = result["PerkName"].ToString();
+					}
+					return perk;
+				}
+			}
+			catch (Exception)
+			{
+
+				throw;
 			}
 		}
 
-		public Perk AddPerk(Perk perk)
+		public bool AddPerk(Perk perk)
 		{
 			try
 			{
@@ -73,50 +89,67 @@ namespace DeepRockGalacticBuilds.Repositories
 					connection.Open();
 
 					var tableCmd = connection.CreateCommand();
-					tableCmd.CommandText = "INSERT INTO Equipment (DwarfName) VALUES (@dwarf);";
-					tableCmd.Parameters.AddWithValue("@dwarf", perk.PerkID);
+					tableCmd.CommandText = "INSERT INTO Perk (PerkName) VALUES (@PerkName);";
+					tableCmd.Parameters.AddWithValue("@PerkName", perk.PerkName);
 					tableCmd.ExecuteNonQuery();
 
-					return perk;
+					return true;
 				}
 			}
 			catch (Exception ex)
 			{
-				throw new Exception("Equipment not added");
+				throw new Exception("Modification not added");
 			}
 		}
 
-		public Perk UpdatePerk(Perk perk)
+		public bool UpdatePerk(Perk perk)
+		{
+			try
+			{
+				var connectionStringBuilder = new SqliteConnectionStringBuilder();
+				connectionStringBuilder.DataSource = database;
+
+				using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+				{
+					connection.Open();
+
+					var tableCmd = connection.CreateCommand();
+					tableCmd.CommandText = "UPDATE Perk SET PerkName = @PerkName WHERE PerkID = @PerkID;";
+					tableCmd.Parameters.AddWithValue("@PerkName", perk.PerkName);
+					tableCmd.Parameters.AddWithValue("@PerkID", perk.PerkID);
+					tableCmd.ExecuteNonQuery();
+
+					return true;
+				}
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
+
+		public bool DeletePerk(int perkID)
 		{
 			var connectionStringBuilder = new SqliteConnectionStringBuilder();
 			connectionStringBuilder.DataSource = database;
 
-			using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+			try
 			{
-				connection.Open();
+				using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+				{
+					connection.Open();
 
-				var tableCmd = connection.CreateCommand();
-				tableCmd.CommandText = "CREATE TABLE Dwarf(name VARCHAR(50));";
-				tableCmd.ExecuteNonQuery();
+					var tableCmd = connection.CreateCommand();
+					tableCmd.CommandText = "DELETE FROM Perk WHERE PerkID = @PerkID;";
+					tableCmd.Parameters.AddWithValue("@PerkID", perkID);
+					tableCmd.ExecuteNonQuery();
 
-				return null;
+					return true;
+				}
 			}
-		}
-
-		public Perk DeletePerk(int perkID)
-		{
-			var connectionStringBuilder = new SqliteConnectionStringBuilder();
-			connectionStringBuilder.DataSource = database;
-
-			using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+			catch (SqliteException ex)
 			{
-				connection.Open();
-
-				var tableCmd = connection.CreateCommand();
-				tableCmd.CommandText = "CREATE TABLE Equipment(name VARCHAR(50));";
-				tableCmd.ExecuteNonQuery();
-
-				return null;
+				return false;
 			}
 		}
 	}

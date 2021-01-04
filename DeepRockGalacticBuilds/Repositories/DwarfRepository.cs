@@ -47,22 +47,36 @@ namespace DeepRockGalacticBuilds.Repositories
 		}
 		public Dwarf SelectDwarfById(int id)
 		{
-			var connectionStringBuilder = new SqliteConnectionStringBuilder();
-			connectionStringBuilder.DataSource = database;
+			var dwarf = new Dwarf();
 
-			using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+			try
 			{
-				connection.Open();
+				var connectionStringBuilder = new SqliteConnectionStringBuilder();
+				connectionStringBuilder.DataSource = database;
 
-				var tableCmd = connection.CreateCommand();
-				tableCmd.CommandText = "SELECT * FROM Dwarf WHERE name = " + id;
-				tableCmd.ExecuteNonQuery();
+				using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+				{
+					connection.Open();
 
-				return null;
+					var tableCmd = connection.CreateCommand();
+					tableCmd.CommandText = "SELECT * FROM Dwarf WHERE name = " + id;
+					var result = tableCmd.ExecuteReader();
+
+					while (result.Read())
+					{
+						dwarf.DwarfID = Convert.ToInt32(result["DwarfID"]);
+						dwarf.DwarfName = result["DwarfName"].ToString();
+					}
+					return dwarf;
+				}
+			}
+			catch (Exception)
+			{
+				throw;
 			}
 		}
 
-		public Dwarf AddDwarf(Dwarf dwarf)
+		public bool AddDwarf(Dwarf dwarf)
 		{
 			try
 			{
@@ -78,7 +92,7 @@ namespace DeepRockGalacticBuilds.Repositories
 					tableCmd.Parameters.AddWithValue("@dwarf", dwarf.DwarfName);
 					tableCmd.ExecuteNonQuery();
 
-					return dwarf;
+					return true;
 				}
 			}
 			catch (Exception ex)
@@ -102,7 +116,7 @@ namespace DeepRockGalacticBuilds.Repositories
 					tableCmd.CommandText = "UPDATE Dwarf SET DwarfName = @DwarfName WHERE DwarfID = @DwarfID;";
 					tableCmd.Parameters.AddWithValue("@DwarfName", dwarf.DwarfName);
 					tableCmd.Parameters.AddWithValue("@DwarfID", dwarf.DwarfID);
-					tableCmd.ExecuteReader();
+					tableCmd.ExecuteNonQuery();
 				}
 				return true;
 			}
@@ -126,9 +140,10 @@ namespace DeepRockGalacticBuilds.Repositories
 					var tableCmd = connection.CreateCommand();
 					tableCmd.CommandText = "DELETE FROM Dwarf WHERE DwarfID = @DwarfID;";
 					tableCmd.Parameters.AddWithValue("@DwarfID", id);
-					tableCmd.ExecuteReader();
+					tableCmd.ExecuteNonQuery();
+
+					return true;
 				}
-				return true;
 			}
 			catch (SqliteException ex)
 			{

@@ -10,9 +10,9 @@ namespace DeepRockGalacticBuilds.Repositories
 	{
 		public List<Modification> GetAllModifications();
 		public Modification GetModificationByID(int modificationID);
-		public Modification AddModification(Modification modification);
-		public Modification UpdateModification(Modification modification);
-		public Modification DeleteModification(int modificationID);
+		public bool AddModification(Modification modification);
+		public bool UpdateModification(Modification modification);
+		public bool DeleteModification(int modificationID);
 
 	}
 }

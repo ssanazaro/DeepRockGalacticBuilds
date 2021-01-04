@@ -46,22 +46,39 @@ namespace DeepRockGalacticBuilds.Repositories
 
 		public Equipment GetEquipmentByID(int id)
 		{
-			var connectionStringBuilder = new SqliteConnectionStringBuilder();
-			connectionStringBuilder.DataSource = database;
+			var equipment = new Equipment();
 
-			using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+			try
 			{
-				connection.Open();
+				var connectionStringBuilder = new SqliteConnectionStringBuilder();
+				connectionStringBuilder.DataSource = database;
 
-				var tableCmd = connection.CreateCommand();
-				tableCmd.CommandText = "SELECT * FROM Equipment WHERE EquipmentID = " + id;
-				tableCmd.ExecuteNonQuery();
+				using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+				{
+					connection.Open();
 
-				return null;
+					var tableCmd = connection.CreateCommand();
+					tableCmd.CommandText = "SELECT * FROM Equipment WHERE EquipmentID = @equipmentID;";
+					tableCmd.Parameters.AddWithValue("@equipmentID", id);
+					var result = tableCmd.ExecuteReader();
+
+					while (result.Read())
+					{
+						equipment.EquipmentID = Convert.ToInt32(result["EquipmentID"]);
+						equipment.EquipmentName = result["EquipmentName"].ToString();
+					}
+					return equipment;
+				}
 			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+
 		}
 
-		public Equipment AddEquipment(Equipment equipment)
+		public bool AddEquipment(Equipment equipment)
 		{
 			try
 			{
@@ -73,11 +90,11 @@ namespace DeepRockGalacticBuilds.Repositories
 					connection.Open();
 
 					var tableCmd = connection.CreateCommand();
-					tableCmd.CommandText = "INSERT INTO Equipment (DwarfName) VALUES (@dwarf);";
-					tableCmd.Parameters.AddWithValue("@dwarf", equipment.EquipmentName);
+					tableCmd.CommandText = "INSERT INTO Equipment (EquipmentName) VALUES (@EquipmentName);";
+					tableCmd.Parameters.AddWithValue("@EquipmentName", equipment.EquipmentName);
 					tableCmd.ExecuteNonQuery();
 
-					return equipment;
+					return true;
 				}
 			}
 			catch (Exception ex)
@@ -86,37 +103,55 @@ namespace DeepRockGalacticBuilds.Repositories
 			}
 		}
 
-		public Equipment UpdateEquipment(Equipment equipment)
+		public bool UpdateEquipment(Equipment equipment)
 		{
-			var connectionStringBuilder = new SqliteConnectionStringBuilder();
-			connectionStringBuilder.DataSource = database;
-
-			using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+			try
 			{
-				connection.Open();
+				var connectionStringBuilder = new SqliteConnectionStringBuilder();
+				connectionStringBuilder.DataSource = database;
 
-				var tableCmd = connection.CreateCommand();
-				tableCmd.CommandText = "CREATE TABLE Dwarf(name VARCHAR(50));";
-				tableCmd.ExecuteNonQuery();
+				using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+				{
+					connection.Open();
 
-				return null;
+					var tableCmd = connection.CreateCommand();
+					tableCmd.CommandText = "UPDATE Equipment SET EquipmentName = @EquipmentName WHERE EquipmentID = @EquipmentID;";
+					tableCmd.Parameters.AddWithValue("@EquipmentName", equipment.EquipmentName);
+					tableCmd.Parameters.AddWithValue("@EquipmentID", equipment.EquipmentID);
+					tableCmd.ExecuteNonQuery();
+
+					return true;
+				}
 			}
+			catch (Exception)
+			{
+				throw;
+			}
+			
 		}
 
-		public Equipment DeleteEquipment(int equipmentID)
+		public bool DeleteEquipment(int equipmentID)
 		{
 			var connectionStringBuilder = new SqliteConnectionStringBuilder();
 			connectionStringBuilder.DataSource = database;
 
-			using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+			try
 			{
-				connection.Open();
+				using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+				{
+					connection.Open();
 
-				var tableCmd = connection.CreateCommand();
-				tableCmd.CommandText = "CREATE TABLE Equipment(name VARCHAR(50));";
-				tableCmd.ExecuteNonQuery();
+					var tableCmd = connection.CreateCommand();
+					tableCmd.CommandText = "DELETE FROM Equipment WHERE EquipmentID = @EquipmentID;";
+					tableCmd.Parameters.AddWithValue("@EquipmentID", equipmentID);
+					tableCmd.ExecuteNonQuery();
 
-				return null;
+					return true;
+				}
+			}
+			catch (SqliteException ex)
+			{
+				return false;
 			}
 		}
 	}

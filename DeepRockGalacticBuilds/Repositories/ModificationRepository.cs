@@ -46,22 +46,38 @@ namespace DeepRockGalacticBuilds.Repositories
 
 		public Modification GetModificationByID(int modificationID)
 		{
-			var connectionStringBuilder = new SqliteConnectionStringBuilder();
-			connectionStringBuilder.DataSource = database;
+			var modification = new Modification();
 
-			using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+			try
 			{
-				connection.Open();
+				var connectionStringBuilder = new SqliteConnectionStringBuilder();
+				connectionStringBuilder.DataSource = database;
 
-				var tableCmd = connection.CreateCommand();
-				tableCmd.CommandText = "SELECT * FROM Equipment WHERE EquipmentID = " + modificationID;
-				tableCmd.ExecuteNonQuery();
+				using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+				{
+					connection.Open();
 
-				return null;
+					var tableCmd = connection.CreateCommand();
+					tableCmd.CommandText = "SELECT * FROM Modification WHERE ModificationID = @ModificationID;";
+					tableCmd.Parameters.AddWithValue("@ModificationID", modificationID);
+					var result = tableCmd.ExecuteReader();
+
+					while (result.Read())
+					{
+						modification.ModificationID = Convert.ToInt32(result["ModificationID"]);
+						modification.ModificationName = result["ModificationName"].ToString();
+					}
+					return modification;
+				}
+			}
+			catch (Exception)
+			{
+
+				throw;
 			}
 		}
 
-		public Modification AddModification(Modification modification)
+		public bool AddModification(Modification modification)
 		{
 			try
 			{
@@ -73,50 +89,67 @@ namespace DeepRockGalacticBuilds.Repositories
 					connection.Open();
 
 					var tableCmd = connection.CreateCommand();
-					tableCmd.CommandText = "INSERT INTO Equipment (DwarfName) VALUES (@dwarf);";
-					tableCmd.Parameters.AddWithValue("@dwarf", modification.ModificationName);
+					tableCmd.CommandText = "INSERT INTO Modification (ModificationName) VALUES (@ModificationName);";
+					tableCmd.Parameters.AddWithValue("@ModificationName", modification.ModificationName);
 					tableCmd.ExecuteNonQuery();
 
-					return modification;
+					return true;
 				}
 			}
 			catch (Exception ex)
 			{
-				throw new Exception("Equipment not added");
+				throw new Exception("Modification not added");
 			}
 		}
 
-		public Modification UpdateModification(Modification modification)
+		public bool UpdateModification(Modification modification)
+		{
+			try
+			{
+				var connectionStringBuilder = new SqliteConnectionStringBuilder();
+				connectionStringBuilder.DataSource = database;
+
+				using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+				{
+					connection.Open();
+
+					var tableCmd = connection.CreateCommand();
+					tableCmd.CommandText = "UPDATE Modification SET ModificationName = @ModificationName WHERE ModificationID = @ModificationID;";
+					tableCmd.Parameters.AddWithValue("@EquipmentName", modification.ModificationName);
+					tableCmd.Parameters.AddWithValue("@ModificationID", modification.ModificationID);
+					tableCmd.ExecuteNonQuery();
+
+					return true;
+				}
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
+
+		public bool DeleteModification(int modificationID)
 		{
 			var connectionStringBuilder = new SqliteConnectionStringBuilder();
 			connectionStringBuilder.DataSource = database;
 
-			using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+			try
 			{
-				connection.Open();
+				using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+				{
+					connection.Open();
 
-				var tableCmd = connection.CreateCommand();
-				tableCmd.CommandText = "CREATE TABLE Dwarf(name VARCHAR(50));";
-				tableCmd.ExecuteNonQuery();
+					var tableCmd = connection.CreateCommand();
+					tableCmd.CommandText = "DELETE FROM Modification WHERE ModificationID = @ModificationID;";
+					tableCmd.Parameters.AddWithValue("@ModificationID", modificationID);
+					tableCmd.ExecuteNonQuery();
 
-				return null;
+					return true;
+				}
 			}
-		}
-
-		public Modification DeleteModification(int modificationID)
-		{
-			var connectionStringBuilder = new SqliteConnectionStringBuilder();
-			connectionStringBuilder.DataSource = database;
-
-			using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+			catch (SqliteException ex)
 			{
-				connection.Open();
-
-				var tableCmd = connection.CreateCommand();
-				tableCmd.CommandText = "CREATE TABLE Equipment(name VARCHAR(50));";
-				tableCmd.ExecuteNonQuery();
-
-				return null;
+				return false;
 			}
 		}
 	}

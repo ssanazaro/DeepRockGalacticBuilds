@@ -26,20 +26,20 @@ namespace DeepRockGalacticBuilds.Managers
 			var equipment = EquipmentRepository.GetEquipmentByID(equipmentID);
 			return equipment;
 		}
-		public Equipment AddEquipment(Equipment equipment)
+		public bool AddEquipment(Equipment equipment)
 		{
 			var result = EquipmentRepository.AddEquipment(equipment);
 			return result;
 		}
-		public Equipment UpdateEquipment(Equipment equipment)
+		public bool UpdateEquipment(Equipment equipment)
 		{
-			Equipment dwarf = EquipmentRepository.UpdateEquipment(equipment);
-			return dwarf;
+			bool result = EquipmentRepository.UpdateEquipment(equipment);
+			return result;
 		}
-		public Equipment DeleteEquipment(int equipmentID)
+		public bool DeleteEquipment(int equipmentID)
 		{
-			Equipment dwarf = EquipmentRepository.DeleteEquipment(equipmentID);
-			return dwarf;
+			bool result = EquipmentRepository.DeleteEquipment(equipmentID);
+			return result;
 		}
 	}
 }

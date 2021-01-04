@@ -32,7 +32,7 @@ namespace DeepRockGalacticBuilds.Controllers
 
 				if (equipment == null)
 				{
-					return NotFound("Requested trivia question does not exist");
+					return NotFound("No Equipment Found");
 				}
 
 				return Ok(equipment);
@@ -57,7 +57,7 @@ namespace DeepRockGalacticBuilds.Controllers
 
 				if (equipment == null)
 				{
-					return NotFound("Requested trivia question does not exist");
+					return NotFound("Equipment not found");
 				}
 
 				return Ok(equipment);
@@ -71,7 +71,7 @@ namespace DeepRockGalacticBuilds.Controllers
 		}
 
 		[HttpPost]
-		[ProducesResponseType(typeof(Equipment), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public IActionResult AddEquipment([FromBody] Equipment equipment)
@@ -80,9 +80,9 @@ namespace DeepRockGalacticBuilds.Controllers
 			{
 				var result = EquipmentManager.AddEquipment(equipment);
 
-				if (result == null)
+				if (result == false)
 				{
-					return NotFound("Dwarf not added");
+					return NotFound("Equipment not added");
 				}
 
 				return Ok(result);
@@ -96,21 +96,21 @@ namespace DeepRockGalacticBuilds.Controllers
 		}
 
 		[HttpPut("")]
-		[ProducesResponseType(typeof(Equipment), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-		public IActionResult UpdateEquipment(int id)
+		public IActionResult UpdateEquipment([FromBody] Equipment equipment)
 		{
 			try
 			{
-				var equipment = EquipmentManager.GetEquipmentByID(id);
+				var result = EquipmentManager.UpdateEquipment(equipment);
 
-				if (equipment == null)
+				if (result == false)
 				{
-					return NotFound("Requested trivia question does not exist");
+					return NotFound("Equipment not updated");
 				}
 
-				return Ok(equipment);
+				return Ok(result);
 			}
 
 			catch (Exception ex)
@@ -121,21 +121,21 @@ namespace DeepRockGalacticBuilds.Controllers
 		}
 
 		[HttpDelete("")]
-		[ProducesResponseType(typeof(Equipment), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public IActionResult DeleteEquipment(int id)
 		{
 			try
 			{
-				var equipment = EquipmentManager.GetEquipmentByID(id);
+				var result = EquipmentManager.DeleteEquipment(id);
 
-				if (equipment == null)
+				if (result == false)
 				{
-					return NotFound("Requested trivia question does not exist");
+					return NotFound("Equipment not deleted");
 				}
 
-				return Ok(equipment);
+				return Ok(result);
 			}
 
 			catch (Exception ex)

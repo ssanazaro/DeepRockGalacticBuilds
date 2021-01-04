@@ -10,8 +10,8 @@ namespace DeepRockGalacticBuilds.Managers
 	{
 		public List<Perk> GetAllPerks();
 		public Perk GetPerkByID(int perkID);
-		public Perk AddPerk(Perk perk);
-		public Perk UpdatePerk(Perk perk);
-		public Perk DeletePerk(int perkID);
+		public bool AddPerk(Perk perk);
+		public bool UpdatePerk(Perk perk);
+		public bool DeletePerk(int perkID);
 	}
 }

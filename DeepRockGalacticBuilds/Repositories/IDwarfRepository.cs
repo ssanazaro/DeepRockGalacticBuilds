@@ -12,7 +12,7 @@ namespace DeepRockGalacticBuilds.Repositories
 		public List<Dwarf> SelectDwarves();
 
 		public Dwarf SelectDwarfById(int id);
-		public Dwarf AddDwarf(Dwarf dwarf);
+		public bool AddDwarf(Dwarf dwarf);
 		public bool UpdateDwarf(Dwarf dwarf);
 		public bool DeleteDwarf(int id);
 	}

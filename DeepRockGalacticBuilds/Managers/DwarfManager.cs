@@ -27,9 +27,9 @@ namespace DeepRockGalacticBuilds.Managers
 			Dwarf dwarf = DwarfRepository.SelectDwarfById(id);
 			return dwarf;
 		}
-		public Dwarf AddDwarf(Dwarf dwarf)
+		public bool AddDwarf(Dwarf dwarf)
 		{
-			Dwarf result = DwarfRepository.AddDwarf(dwarf);
+			bool result = DwarfRepository.AddDwarf(dwarf);
 			return result;
 		}
 		public bool UpdateDwarf(Dwarf dwarf)

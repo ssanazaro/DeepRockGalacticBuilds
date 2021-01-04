@@ -68,7 +68,7 @@ namespace DeepRockGalacticBuilds.Controllers
 		}
 
 		[HttpPost]
-		[ProducesResponseType(typeof(Dwarf), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public IActionResult AddDwarf([FromBody]Dwarf dwarf)
@@ -77,7 +77,7 @@ namespace DeepRockGalacticBuilds.Controllers
 			{
 				var result = DwarfManager.AddDwarf(dwarf);
 
-				if (result == null )
+				if (result == false )
 				{
 					return NotFound("Dwarf not added");
 				}
